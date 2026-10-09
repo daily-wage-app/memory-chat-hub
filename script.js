@@ -1,7 +1,16 @@
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'memories-and-us-v1';
+  const STORAGE_KEY = 'memories-and-us-v2';
+  const LEGACY_STORAGE_KEY = 'memories-and-us-v1';
+  const DEFAULT_MEMORIES = Array.from({ length: 10 }, (_, index) => ({
+    id: `included-chat-${String(index + 1).padStart(2, '0')}`,
+    title: `စကားဝိုင်း အမှတ်တရ ${new Intl.NumberFormat('my-MM').format(index + 1)}`,
+    date: '',
+    caption: 'ပုံထဲက စကားလေးတွေကို ပြန်ဖတ်ဖို့ သိမ်းထားပါတယ်။',
+    image: `assets/memories/${String(index + 1).padStart(2, '0')}.${index === 2 ? 'webp' : 'jpg'}`,
+    favorite: false,
+  }));
   const MAX_FILE_SIZE = 1.5 * 1024 * 1024;
   const form = document.getElementById('memoryForm');
   const grid = document.getElementById('memoryGrid');
@@ -25,10 +34,22 @@
 
   function loadMemories() {
     try {
-      const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      return Array.isArray(value) ? value.filter((item) => item && typeof item === 'object' && typeof item.id === 'string') : [];
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved !== null) {
+        const value = JSON.parse(saved);
+        return Array.isArray(value) ? value.filter((item) => item && typeof item === 'object' && typeof item.id === 'string') : [];
+      }
+
+      let previous = [];
+      try {
+        const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || '[]');
+        if (Array.isArray(legacy)) previous = legacy.filter((item) => item && typeof item === 'object' && typeof item.id === 'string');
+      } catch { /* Start with the included screenshots if old browser data is unreadable. */ }
+      const initial = [...DEFAULT_MEMORIES.map((item) => ({ ...item })), ...previous];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
+      return initial;
     } catch {
-      return [];
+      return DEFAULT_MEMORIES.map((item) => ({ ...item }));
     }
   }
 
