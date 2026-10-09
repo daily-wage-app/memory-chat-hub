@@ -1,18 +1,18 @@
 # စကားဝိုင်းမှတ်တမ်း
 
-Chat screenshot များကို လူတိုင်းဖတ်ရှုနိုင်သည့် public archive ဝက်ဘ်ဆိုက်။ ဝက်ဘ်ဆိုက်တွင် **ကြည့်ရှုခြင်း၊ ရှာဖွေခြင်းနှင့် ပုံကို အပြည့်ကြည့်ခြင်းသာ** ရနိုင်ပြီး viewer များအတွက် upload၊ edit၊ delete၊ import သို့မဟုတ် ပြင်ဆင်ချက်သိမ်းခြင်း မရှိပါ။
+Chat screenshot များကို လူတိုင်းကြည့်နိုင်သည့် public archive website ဖြစ်သည်။ Gallery card တစ်ခုစီတွင် **ပုံနှင့် ပုံ URL လက်ခံရရှိသည့်နေ့** ကိုသာ ပြသထားပြီး အပိုခေါင်းစဉ်၊ placeholder မှတ်ချက် သို့မဟုတ် “နေ့စွဲမသတ်မှတ်ရသေး” စာသားမပြပါ။ ပေးထားသော screenshot ၁၀ ပုံကို ၂၀၂၆ ခုနှစ် အောက်တိုဘာ ၉ ရက်တွင် လက်ခံရရှိထားသည့်နေ့အဖြစ် မှတ်တမ်းတင်ထားသည်။
 
 ## Website
 
 [Public GitHub Pages website](https://daily-wage-app.github.io/memory-chat-hub/)
 
-Public repository ၏ `main` branch မှ GitHub Pages ဖြင့် publish လုပ်ထားသည်။ ပေးထားသော screenshot ၁၀ ပုံနှင့် banner ကို repository ထဲ asset အဖြစ် သိမ်းထားပြီး ပုံထဲကစာများအပါအဝင် လူတိုင်းကြည့်နိုင်သည်။
+## ကြည့်ရှုခွင့်
 
-## Viewer permissions
+Website သည် read-only ဖြစ်သည်။ Visitor များအတွက် upload form၊ ပြင်ဆင်ရန်/ဖျက်ရန်ခလုတ်၊ import/export သို့မဟုတ် browser storage မပါဝင်ပါ။ ပုံများကို အပြည့်ကြည့်နိုင်သော်လည်း site ထဲမှ content ကို ပြောင်းလဲ၍မရပါ။ Gallery ကို update လုပ်နိုင်သူမှာ GitHub repository ၏ `main` branch သို့ push ခွင့်ရှိသည့် maintainer များသာ ဖြစ်သည်။
 
-ဆိုဒ်ထဲတွင် upload form၊ ပြင်ဆင်ရန်ခလုတ်၊ ဖျက်ရန်ခလုတ်၊ backup import/export သို့မဟုတ် မှတ်တမ်းရေးသားသည့် browser storage မပါဝင်ပါ။ ရှာဖွေရေး box သည် စာမျက်နှာပေါ်ရှိပုံများကိုသာ စစ်ထုတ်ပြပြီး ရလဒ်ကို သိမ်းမထားပါ။ GitHub Pages သည် static website ဖြစ်သဖြင့် visitor များက site မှတစ်ဆင့် content ပြောင်းလဲ၍ မရပါ။
+## နောက်ထပ်ပုံထည့်ခြင်းနှင့် ရက်စွဲ
 
-Repository ထဲသို့ push လုပ်နိုင်သည့် GitHub account/maintainer များသာ publish လုပ်ထားသော website ကို update လုပ်နိုင်သည်။ Public visitor များသည် repository ကို ကြည့်ရှုနိုင်သော်လည်း `main` branch သို့ တိုက်ရိုက်ရေးသားခွင့် အလိုအလျောက် မရပါ။
+Owner က နောက်ထပ် photo URL ပေးလာပါက repository ထဲသို့ image asset အသစ်ထည့်ပြီး `script.js` ရှိ `records` list ထဲတွင် ထည့်ပါ။ `date` ကို URL လက်ခံရရှိသည့်နေ့အဖြစ် `YYYY-MM-DD` ပုံစံဖြင့် သတ်မှတ်ပါ။ ထိုရက်စွဲသည် ပုံထဲကစကားဝိုင်း ဖြစ်ပွားသည့်နေ့ကို မဆိုလိုပါ။ Viewer များက website မှတစ်ဆင့် ပုံအသစ် တင်၍မရပါ။
 
 ## Local preview
 
@@ -20,4 +20,4 @@ Repository ထဲသို့ push လုပ်နိုင်သည့် GitHu
 python3 -m http.server 8000
 ```
 
-ပြီးလျှင် <http://localhost:8000> ကိုဖွင့်ပါ။ အဓိကဖိုင်များမှာ `index.html`, `styles.css`, `script.js`; ပုံများမှာ `assets/memories/` နှင့် `assets/memories-us.jpg` ဖြစ်သည်။
+ပြီးလျှင် <http://localhost:8000> ကိုဖွင့်ပါ။ ပုံများမှာ `assets/memories/` ထဲတွင်ရှိသည်။

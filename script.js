@@ -1,52 +1,50 @@
 (() => {
   'use strict';
 
+  // These screenshots were supplied on 9 October 2026 (UTC+7).
+  // When the owner provides a new photo URL, add it here with that day's date.
+  const suppliedOn = '2026-10-09';
   const records = Array.from({ length: 10 }, (_, index) => ({
-    title: `စကားဝိုင်းမှတ်တမ်း ${new Intl.NumberFormat('my-MM').format(index + 1)}`,
-    caption: 'ပေးထားသော screenshot ကို မှတ်တမ်းအဖြစ် သိမ်းဆည်းထားသည်။',
     image: `assets/memories/${String(index + 1).padStart(2, '0')}.${index === 2 ? 'webp' : 'jpg'}`,
+    date: suppliedOn,
   }));
   const grid = document.getElementById('memoryGrid');
-  const search = document.getElementById('searchInput');
   const lightbox = document.getElementById('lightbox');
+  const numberFormat = new Intl.NumberFormat('my-MM');
 
-  function openImage(record) {
+  function formatDate(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return '';
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day, 12));
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return '';
+    const months = ['ဇန်နဝါရီ', 'ဖေဖော်ဝါရီ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်', 'ဇူလိုင်', 'ဩဂုတ်', 'စက်တင်ဘာ', 'အောက်တိုဘာ', 'နိုဝင်ဘာ', 'ဒီဇင်ဘာ'];
+    const toBurmese = (digits) => String(digits).replace(/[0-9]/g, (digit) => '၀၁၂၃၄၅၆၇၈၉'[Number(digit)]);
+    return `${toBurmese(day)} ${months[month - 1]} ${toBurmese(year)}`;
+  }
+
+  function openImage(record, index) {
     const image = document.getElementById('lightboxImage');
     image.src = record.image;
-    document.getElementById('lightboxCaption').textContent = record.title;
+    image.alt = `Chat screenshot ${numberFormat.format(index + 1)}`;
+    document.getElementById('lightboxCaption').textContent = formatDate(record.date);
     lightbox.showModal();
   }
 
   function render() {
-    const query = search.value.trim().toLocaleLowerCase();
-    const visible = records.filter((record) => `${record.title} ${record.caption}`.toLocaleLowerCase().includes(query));
     grid.replaceChildren();
-    document.getElementById('resultLabel').textContent = `မှတ်တမ်း ${new Intl.NumberFormat('my-MM').format(visible.length)} ခု`;
     document.getElementById('momentCount').textContent = String(records.length);
     document.getElementById('photoCount').textContent = String(records.length);
 
-    if (!visible.length) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-state';
-      const title = document.createElement('strong');
-      title.textContent = 'မှတ်တမ်းရှာမတွေ့ပါ';
-      const message = document.createElement('p');
-      message.textContent = 'အခြားစကားလုံးဖြင့် ရှာကြည့်ပါ။';
-      empty.append(title, message);
-      grid.append(empty);
-      return;
-    }
-
-    visible.forEach((record) => {
+    records.forEach((record, index) => {
       const card = document.createElement('article');
       card.className = 'memory-card';
       const photo = document.createElement('button');
       photo.type = 'button';
       photo.className = 'memory-photo';
-      photo.setAttribute('aria-label', `${record.title} ပုံကို အပြည့်ကြည့်ရန်`);
+      photo.setAttribute('aria-label', `Chat screenshot ${numberFormat.format(index + 1)} ကို အပြည့်ကြည့်ရန်`);
       const image = document.createElement('img');
       image.src = record.image;
-      image.alt = record.title;
+      image.alt = `Chat screenshot ${numberFormat.format(index + 1)}`;
       image.loading = 'lazy';
       image.addEventListener('error', () => {
         photo.replaceChildren(document.createTextNode('▧'));
@@ -54,29 +52,23 @@
         photo.classList.add('photo-missing');
       }, { once: true });
       photo.append(image);
-      photo.addEventListener('click', () => openImage(record));
+      photo.addEventListener('click', () => openImage(record, index));
+      card.append(photo);
 
-      const body = document.createElement('div');
-      body.className = 'memory-body';
-      const date = document.createElement('div');
-      date.className = 'memory-date';
-      date.textContent = 'နေ့စွဲ မသတ်မှတ်ရသေး';
-      const title = document.createElement('h3');
-      title.className = 'memory-title';
-      title.textContent = record.title;
-      const caption = document.createElement('p');
-      caption.className = 'memory-caption';
-      caption.textContent = record.caption;
-      const tag = document.createElement('span');
-      tag.className = 'record-tag';
-      tag.textContent = 'ဖတ်ရှုရန်သာ';
-      body.append(date, title, caption, tag);
-      card.append(photo, body);
+      const dateText = formatDate(record.date);
+      if (dateText) {
+        const body = document.createElement('div');
+        body.className = 'memory-body';
+        const date = document.createElement('div');
+        date.className = 'memory-date';
+        date.textContent = dateText;
+        body.append(date);
+        card.append(body);
+      }
       grid.append(card);
     });
   }
 
-  search.addEventListener('input', render);
   document.getElementById('lightboxClose').addEventListener('click', () => lightbox.close());
   lightbox.addEventListener('click', (event) => { if (event.target === lightbox) lightbox.close(); });
   render();
