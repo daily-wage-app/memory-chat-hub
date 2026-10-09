@@ -1,36 +1,43 @@
-# Our Love Journal
+# Memories & Us
 
-A romantic memory gallery website for storing favorite chat screenshots, photos, and meaningful moments together.
+နှစ်ယောက်အတူ ဖန်တီးခဲ့တဲ့ chat screenshot၊ ဓာတ်ပုံနဲ့ အမှတ်တရလေးတွေကို သိမ်းထားဖို့ ရိုးရှင်းပြီး responsive ဖြစ်တဲ့ မြန်မာဘာသာ digital scrapbook ဝက်ဘ်ဆိုက်။
 
-## Features
+## ပါဝင်တဲ့အရာများ
 
-- Beautiful romantic landing page
-- Photo upload or image URL support
-- Save memories to browser localStorage
-- Favorite and delete actions
-- Responsive design for desktop and mobile
-- Ready to open directly in a browser
+- Desktop နဲ့ ဖုန်းမျက်နှာပြင်အတွက် အလိုက်သင့်ပြောင်းလဲတဲ့ romantic scrapbook design
+- အမှတ်တရတစ်ခုချင်းစီမှာ ခေါင်းစဉ်၊ နေ့စွဲ၊ မှတ်ချက်နဲ့ ပုံ URL ထည့်နိုင်ခြင်း
+- ပုံဖိုင် (JPG, PNG, WEBP, GIF — 1.5 MB အထိ) တိုက်ရိုက်ရွေးထည့်နိုင်ခြင်း
+- ပုံမသိမ်းခင် preview ကြည့်နိုင်ခြင်း၊ ပုံကို full-screen ကြည့်နိုင်ခြင်း
+- အကြိုက်ဆုံးမှတ်သားခြင်း၊ ရှာဖွေခြင်း၊ ဖျက်ခြင်း
+- JSON backup ထုတ်ယူခြင်း၊ backup ကို ပြန်ထည့်ခြင်း
+- Data ကို browser `localStorage` ထဲမှာ သိမ်းဆည်းခြင်း — server/backend မလိုပါ
 
-## Run locally
+## စတင်အသုံးပြုရန်
 
-Open `index.html` in your browser.
+1. Repository ကို clone လုပ်ပါ၊ သို့မဟုတ် GitHub မှာ `index.html` ကိုဖွင့်ပါ။
+2. Local preview အတွက် project folder မှာ အောက်က command ကို run လုပ်ပါ။
 
-You can also run a quick local server:
+   ```bash
+   python3 -m http.server 8000
+   ```
 
-```bash
-python3 -m http.server 8000
-```
+3. Browser မှာ <http://localhost:8000> ကိုဝင်ပါ။
+4. “အမှတ်တရအသစ် သိမ်းမယ်” ထဲမှာ ခေါင်းစဉ်၊ နေ့စွဲ၊ မှတ်ချက်နဲ့ ပုံ URL သို့မဟုတ် ပုံဖိုင်ကို ထည့်ပါ။
 
-Then open http://localhost:8000
+ပုံ URL က `https://` (သို့မဟုတ် `http://`) နဲ့ စရပါမယ်။ Image hosting လင့်ခ်ကို ထည့်နိုင်ပါတယ်။
 
-## Files
+## သိမ်းဆည်းမှုနှင့် ကိုယ်ရေးလုံခြုံမှု
 
-- `index.html` — page structure
-- `styles.css` — romantic styling
-- `script.js` — memory saving logic
+ဒီ version မှာ အမှတ်တရအားလုံးဟာ အသုံးပြုနေတဲ့ device/browser ရဲ့ local storage ထဲမှာပဲ ရှိပါတယ်။ အခြားဖုန်း၊ browser သို့မဟုတ် device နဲ့ အလိုအလျောက် မျှဝေမထားပါ။ Browser data ရှင်းလိုက်ရင် မှတ်တမ်းတွေ ပျောက်နိုင်တာကြောင့် “Backup” ကို အခါအားလျော်စွာ download လုပ်ထားပါ။ Backup ဖိုင်ကို ပြန်ထည့်တဲ့အခါ လက်ရှိအမှတ်တရတွေနဲ့ ပေါင်းထည့်ပေးပါတယ်။
 
-## Notes
+ပုံဖိုင်ကို localStorage ထဲ သိမ်းတဲ့အတွက် 1.5 MB ထက်ကြီးတဲ့ ဖိုင်တွေကို လက်မခံပါ။ ပုံအများကြီးသိမ်းရန် image URL အသုံးပြုတာက ပိုအဆင်ပြေပါတယ်။
 
-This version stores data in the browser using localStorage, so memories stay saved on the same device/browser unless the storage is cleared.
+## ဖိုင်များ
 
-If you want, this can later be upgraded to a backend-powered app with user accounts and real database storage.
+- `index.html` — မြန်မာဘာသာ site structure
+- `styles.css` — responsive design
+- `script.js` — gallery, local saving, search, favorites, backup/restore
+- `assets/memories-us.jpg` — site cover အဖြစ် အသုံးပြုထားတဲ့ ပေးထားသော banner ပုံ
+- `chat-gallery.html` — ယခင် standalone chat mockup (အသစ်ပြင်ထားသော gallery ရဲ့ သီးခြားဖိုင်)
+
+Backend/database အလိုအလျောက် sync မပါဝင်သေးပါ။ အနာဂတ်မှာ accounts, cloud sync, သီးသန့် password စတာတွေ ထပ်တိုးလို့ရပါတယ်။

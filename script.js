@@ -1,184 +1,319 @@
-const STORAGE_KEY = 'love-memory-gallery';
+(() => {
+  'use strict';
 
-const defaultMemories = [
-  {
-    id: crypto.randomUUID(),
-    title: 'Our favorite chat',
-    date: '2025-09-14',
-    caption: 'The message that made my heart skip a beat. You always know exactly how to make the day feel softer.',
-    image:
-      'https://i.ibb.co/0pxYdHhT/Screenshot-com-zhiliaoapp-musically.jpg',
-    favorite: true,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Sweet little date',
-    date: '2025-08-02',
-    caption: 'The most simple evening turned into one of my favorite memories.',
-    image:
-      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80',
-    favorite: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Always smiling together',
-    date: '2025-06-19',
-    caption: 'Those laughs will always be one of the prettiest sounds in my life.',
-    image:
-      'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80',
-    favorite: true,
-  }
-];
+  const STORAGE_KEY = 'memories-and-us-v1';
+  const MAX_FILE_SIZE = 1.5 * 1024 * 1024;
+  const form = document.getElementById('memoryForm');
+  const grid = document.getElementById('memoryGrid');
+  const toast = document.getElementById('toast');
+  const imageUrl = document.getElementById('imageUrl');
+  const imageFile = document.getElementById('imageFile');
+  const preview = document.getElementById('imagePreview');
+  const previewImage = document.getElementById('previewImage');
+  const formMessage = document.getElementById('formMessage');
+  const lightbox = document.getElementById('lightbox');
+  let favoritesOnly = false;
+  let toastTimer;
+  let previewObjectUrl = null;
 
-const form = document.getElementById('memoryForm');
-const memoryGrid = document.getElementById('memoryGrid');
-const momentCount = document.getElementById('momentCount');
-const photoCount = document.getElementById('photoCount');
-const favoriteCount = document.getElementById('favoriteCount');
+  const byId = (id) => document.getElementById(id);
+  const makeId = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const localDateValue = () => {
+    const now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  };
 
-function getMemories() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  if (!saved) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMemories));
-    return [...defaultMemories];
-  }
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) && parsed.length ? parsed : [...defaultMemories];
-  } catch (error) {
-    return [...defaultMemories];
-  }
-}
-
-function saveMemories(memories) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(memories));
-}
-
-function formatDate(dateValue) {
-  if (!dateValue) return 'Memories';
-
-  const date = new Date(dateValue + 'T00:00:00');
-  return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
-}
-
-function updateStats(memories) {
-  const favoriteTotal = memories.filter((memory) => memory.favorite).length;
-  const photoTotal = memories.filter((memory) => memory.image).length;
-
-  momentCount.textContent = memories.length;
-  photoCount.textContent = photoTotal;
-  favoriteCount.textContent = favoriteTotal;
-}
-
-function createMemoryCard(memory) {
-  const article = document.createElement('article');
-  article.className = 'memory-card';
-
-  article.innerHTML = `
-    <img src="${memory.image}" alt="${memory.title}" />
-    <div class="card-content">
-      <div class="memory-top">
-        <h4>${memory.title}</h4>
-        <span class="date-badge">${formatDate(memory.date)}</span>
-      </div>
-      <p>${memory.caption}</p>
-      <div class="card-actions">
-        <button class="icon-btn ${memory.favorite ? 'is-favorite' : ''}" data-action="favorite" data-id="${memory.id}">${memory.favorite ? '♥ Favorite' : '♡ Favorite'}</button>
-        <button class="icon-btn" data-action="delete" data-id="${memory.id}">Delete</button>
-      </div>
-    </div>
-  `;
-
-  return article;
-}
-
-function renderMemories() {
-  const memories = getMemories();
-  memoryGrid.innerHTML = '';
-
-  if (!memories.length) {
-    memoryGrid.innerHTML = '<div class="empty-state">No memories yet. Save your first moment of love.</div>';
-    updateStats([]);
-    return;
-  }
-
-  memories.forEach((memory) => {
-    memoryGrid.appendChild(createMemoryCard(memory));
-  });
-
-  updateStats(memories);
-}
-
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const title = document.getElementById('title').value.trim();
-  const date = document.getElementById('date').value;
-  const caption = document.getElementById('caption').value.trim();
-  const urlInput = document.getElementById('imageUrl').value.trim();
-  const fileInput = document.getElementById('imageFile').files[0];
-
-  if (!title || !date || !caption) {
-    return;
-  }
-
-  let image = urlInput || '';
-
-  if (fileInput) {
-    image = await readFileAsDataUrl(fileInput);
-  }
-
-  if (!image) {
-    image = 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80';
-  }
-
-  const memories = getMemories();
-  memories.unshift({
-    id: crypto.randomUUID(),
-    title,
-    date,
-    caption,
-    image,
-    favorite: false,
-  });
-
-  saveMemories(memories);
-  renderMemories();
-  form.reset();
-});
-
-memoryGrid.addEventListener('click', (event) => {
-  const button = event.target.closest('button');
-  if (!button) return;
-
-  const { action, id } = button.dataset;
-  const memories = getMemories();
-
-  if (action === 'favorite') {
-    const index = memories.findIndex((memory) => memory.id === id);
-    if (index !== -1) {
-      memories[index].favorite = !memories[index].favorite;
-      saveMemories(memories);
-      renderMemories();
+  function loadMemories() {
+    try {
+      const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(value) ? value.filter((item) => item && typeof item === 'object' && typeof item.id === 'string') : [];
+    } catch {
+      return [];
     }
   }
 
-  if (action === 'delete') {
-    const filtered = memories.filter((memory) => memory.id !== id);
-    saveMemories(filtered);
-    renderMemories();
+  function saveMemories(items) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      return true;
+    } catch {
+      showToast('Browser storage ပြည့်နေပါတယ်။ ပုံဖိုင်ကြီးတွေကို URL နဲ့အစားထိုးပါ။');
+      return false;
+    }
   }
-});
 
-renderMemories();
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 3200);
+  }
+
+  function formatDate(value) {
+    if (!value) return 'နေ့စွဲ မသတ်မှတ်ရသေး';
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return 'နေ့စွဲ မသတ်မှတ်ရသေး';
+    return new Intl.DateTimeFormat('my-MM', { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
+  }
+
+  function updateCounts(items) {
+    byId('momentCount').textContent = String(items.length);
+    byId('photoCount').textContent = String(items.filter((item) => item.image).length);
+    byId('favoriteCount').textContent = String(items.filter((item) => item.favorite).length);
+  }
+
+  function textElement(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    element.textContent = text;
+    return element;
+  }
+
+  function createCard(item) {
+    const card = document.createElement('article');
+    card.className = 'memory-card';
+
+    const photo = document.createElement('div');
+    photo.className = item.image ? 'memory-photo' : 'memory-photo photo-missing';
+    if (item.image) {
+      photo.setAttribute('role', 'button');
+      photo.setAttribute('tabindex', '0');
+      photo.setAttribute('aria-label', `${item.title || 'အမှတ်တရပုံ'} ကို အပြည့်ကြည့်ရန်`);
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.alt = item.title || 'အမှတ်တရပုံ';
+      img.loading = 'lazy';
+      img.addEventListener('error', () => { photo.replaceChildren(textElement('span', '', '♡')); photo.classList.add('photo-missing'); photo.removeAttribute('role'); photo.removeAttribute('tabindex'); }, { once: true });
+      photo.append(img);
+      photo.addEventListener('click', () => openLightbox(item));
+      photo.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } });
+    } else {
+      photo.append(textElement('span', '', '♡'));
+    }
+
+    const body = document.createElement('div');
+    body.className = 'memory-body';
+    body.append(textElement('div', 'memory-date', formatDate(item.date)));
+    body.append(textElement('h3', 'memory-title', item.title || 'ခေါင်းစဉ်မရှိသော အမှတ်တရ'));
+    body.append(textElement('p', 'memory-caption', item.caption || ''));
+
+    const actions = document.createElement('div');
+    actions.className = 'memory-actions';
+    const favorite = document.createElement('button');
+    favorite.type = 'button';
+    favorite.className = `card-action${item.favorite ? ' is-favorite' : ''}`;
+    favorite.dataset.action = 'favorite';
+    favorite.dataset.id = item.id;
+    favorite.setAttribute('aria-pressed', String(Boolean(item.favorite)));
+    favorite.textContent = item.favorite ? '♥ အကြိုက်ဆုံး' : '♡ အကြိုက်ဆုံးထဲထည့်';
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'card-action';
+    remove.dataset.action = 'delete';
+    remove.dataset.id = item.id;
+    remove.textContent = 'ဖျက်မယ် ×';
+    actions.append(favorite, remove);
+    body.append(actions);
+    card.append(photo, body);
+    return card;
+  }
+
+  function render() {
+    const all = loadMemories().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    const query = byId('searchInput').value.trim().toLocaleLowerCase();
+    const shown = all.filter((item) => {
+      const matchesFavorite = !favoritesOnly || item.favorite;
+      const searchable = `${item.title || ''} ${item.caption || ''}`.toLocaleLowerCase();
+      return matchesFavorite && searchable.includes(query);
+    });
+    grid.replaceChildren();
+    updateCounts(all);
+    byId('resultLabel').textContent = favoritesOnly ? `${shown.length} ခု · အကြိုက်ဆုံး` : `${shown.length} ခု`;
+
+    if (!shown.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.append(textElement('span', 'empty-icon', query || favoritesOnly ? '⌕' : '♡'));
+      const title = query || favoritesOnly ? 'ရှာတွေ့တာ မရှိသေးပါ' : 'ဒီစာမျက်နှာလေးမှာ အမှတ်တရ မရှိသေးပါ';
+      empty.append(textElement('strong', '', title));
+      const message = document.createElement('p');
+      message.textContent = query || favoritesOnly ? 'စကားလုံးပြောင်းပြီး ထပ်ရှာကြည့်ပါ။' : 'ပထမဆုံး chat screenshot လေးကို URL နဲ့ထည့်ပြီး စလိုက်ရအောင် — ';
+      if (!query && !favoritesOnly) {
+        const link = document.createElement('a');
+        link.href = '#add-memory';
+        link.textContent = 'အမှတ်တရတစ်ခု သိမ်းမယ်';
+        message.append(link);
+      }
+      empty.append(message);
+      grid.append(empty);
+      return;
+    }
+    shown.forEach((item) => grid.append(createCard(item)));
+  }
+
+  function validImageUrl(value) {
+    try {
+      const parsed = new URL(value);
+      return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : null;
+    } catch { return null; }
+  }
+
+  function readAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error('ပုံဖိုင်ကို ဖတ်မရပါ။'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function clearPreview() {
+    if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl = null;
+    previewImage.removeAttribute('src');
+    preview.hidden = true;
+  }
+
+  function updatePreview() {
+    clearPreview();
+    const file = imageFile.files?.[0];
+    if (file) {
+      previewObjectUrl = URL.createObjectURL(file);
+      previewImage.src = previewObjectUrl;
+      preview.hidden = false;
+      return;
+    }
+    const url = validImageUrl(imageUrl.value.trim());
+    if (url) {
+      previewImage.src = url;
+      preview.hidden = false;
+    }
+  }
+
+  function openLightbox(item) {
+    if (!item.image) return;
+    byId('lightboxImage').src = item.image;
+    byId('lightboxCaption').textContent = item.title || '';
+    lightbox.showModal();
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    formMessage.textContent = '';
+    const title = byId('title').value.trim();
+    const date = byId('date').value;
+    const caption = byId('caption').value.trim();
+    const rawUrl = imageUrl.value.trim();
+    const file = imageFile.files?.[0];
+    let image = '';
+
+    if (rawUrl && !validImageUrl(rawUrl)) {
+      formMessage.textContent = 'ပုံ URL မှန်ကန်မှုရှိမရှိ စစ်ဆေးပါ (https:// သို့မဟုတ် http://)။';
+      imageUrl.focus();
+      return;
+    }
+    if (file && !file.type.startsWith('image/')) {
+      formMessage.textContent = 'ပုံဖိုင်အမျိုးအစားကိုသာ ရွေးပါ။';
+      return;
+    }
+    if (file && file.size > MAX_FILE_SIZE) {
+      formMessage.textContent = 'ပုံဖိုင် 1.5 MB ထက်ကြီးနေပါတယ်။ ပုံ URL သုံးပါ၊ ဒါမှမဟုတ် ပုံကိုသေးအောင်လုပ်ပြီး ထပ်ရွေးပါ။';
+      return;
+    }
+
+    try {
+      image = file ? await readAsDataUrl(file) : (validImageUrl(rawUrl) || '');
+    } catch (error) {
+      formMessage.textContent = error.message;
+      return;
+    }
+    const items = loadMemories();
+    items.unshift({ id: makeId(), title, date, caption, image, favorite: false, createdAt: new Date().toISOString() });
+    if (!saveMemories(items)) return;
+    form.reset();
+    clearPreview();
+    byId('date').value = localDateValue();
+    render();
+    showToast('အမှတ်တရလေးကို သိမ်းပြီးပါပြီ ♡');
+    byId('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  grid.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+    const items = loadMemories();
+    const index = items.findIndex((item) => item.id === button.dataset.id);
+    if (index < 0) return;
+    if (button.dataset.action === 'favorite') items[index].favorite = !items[index].favorite;
+    if (button.dataset.action === 'delete') {
+      if (!window.confirm(`“${items[index].title || 'ဒီအမှတ်တရ'}” ကို ဖျက်မှာ သေချာပါသလား?`)) return;
+      items.splice(index, 1);
+    }
+    if (saveMemories(items)) render();
+  });
+
+  byId('favoritesFilter').addEventListener('click', (event) => {
+    favoritesOnly = !favoritesOnly;
+    event.currentTarget.setAttribute('aria-pressed', String(favoritesOnly));
+    render();
+  });
+  byId('searchInput').addEventListener('input', render);
+  imageUrl.addEventListener('input', updatePreview);
+  imageFile.addEventListener('change', updatePreview);
+  byId('removePreview').addEventListener('click', () => { imageFile.value = ''; imageUrl.value = ''; clearPreview(); });
+  byId('lightboxClose').addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('click', (event) => { if (event.target === lightbox) lightbox.close(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && lightbox.open) lightbox.close(); });
+
+  byId('exportButton').addEventListener('click', () => {
+    const data = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), memories: loadMemories() }, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'memories-and-us-backup.json';
+    anchor.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('Backup ဖိုင်ကို download လုပ်ပြီးပါပြီ။');
+  });
+
+  byId('importFile').addEventListener('change', async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      const imported = Array.isArray(parsed) ? parsed : parsed.memories;
+      if (!Array.isArray(imported) || !imported.every((item) => item && typeof item.title === 'string' && typeof item.caption === 'string')) {
+        throw new Error('Backup ဖိုင်ပုံစံ မမှန်ပါ။');
+      }
+      const current = loadMemories();
+      const existing = new Set(current.map((item) => item.id));
+      const cleaned = imported.map((item) => {
+        const oldId = typeof item.id === 'string' ? item.id : makeId();
+        const id = existing.has(oldId) ? makeId() : oldId;
+        existing.add(id);
+        const image = typeof item.image === 'string' && (item.image.startsWith('data:image/') || validImageUrl(item.image)) ? item.image : '';
+        return {
+          id,
+          title: item.title.slice(0, 90),
+          date: typeof item.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.date) ? item.date : '',
+          caption: item.caption.slice(0, 500),
+          image,
+          favorite: Boolean(item.favorite),
+          createdAt: typeof item.createdAt === 'string' ? item.createdAt : new Date().toISOString(),
+        };
+      });
+      const merged = [...current, ...cleaned];
+      if (!saveMemories(merged)) return;
+      render();
+      showToast(`${imported.length} ခုကို ပြန်ထည့်ပြီးပါပြီ။`);
+    } catch (error) {
+      showToast(error.message || 'Backup ကို ဖတ်မရပါ။');
+    } finally {
+      event.target.value = '';
+    }
+  });
+
+  byId('date').value = localDateValue();
+  render();
+})();
