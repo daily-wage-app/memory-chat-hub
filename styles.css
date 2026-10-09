@@ -134,6 +134,8 @@ h1 em, h2 em { color: var(--rose-deep); font-weight: 500; }
 .empty-state a { color: var(--rose-deep); text-decoration-color: #dbacaa; text-underline-offset: 3px; }
 .footer { position: relative; margin-top: 84px; padding: 20px 0 32px; color: #9a8581; text-align: center; font: italic 12px var(--serif); }
 .footer p { margin: 12px 0 5px; }
+.footer-contact { color: #a78684; font: 12px var(--sans); text-decoration-color: #dbacaa; text-underline-offset: 3px; }
+.footer-contact:hover { color: var(--rose-deep); }
 .footer > a { color: #a78684; text-decoration: none; font: 10px var(--sans); }
 .footer-rule { display: flex; align-items: center; gap: 12px; color: var(--rose); }
 .footer-rule::before, .footer-rule::after { content: ''; flex: 1; height: 1px; background: #eadbd5; }
