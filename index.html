@@ -4,21 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fff9f5" />
-    <meta name="description" content="Chat screenshot များကို ကြည့်ရှုရန်သာ ပြုလုပ်ထားသော public read-only archive။" />
-    <title>စကားဝိုင်းမှတ်တမ်း — Chat Archive</title>
+    <meta name="description" content="Chat screenshot များကိုကြည့်ရှုနိုင်သည့် photo archive။" />
+    <meta property="og:image" content="https://daily-wage-app.github.io/memory-chat-hub/assets/memories-us.jpg" />
+    <title>Memories & Us — Chat Archive</title>
+    <link rel="icon" type="image/jpeg" href="assets/memories-us.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=contact-6" />
+    <link rel="stylesheet" href="styles.css?v=header-7" />
     <script src="script.js?v=photos-5" defer></script>
   </head>
   <body>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="page-shell">
       <header class="topbar">
-        <a class="brand" href="#home" aria-label="စကားဝိုင်းမှတ်တမ်း ပင်မစာမျက်နှာ">
-          <span class="brand-mark" aria-hidden="true">▤</span>
-          <span class="brand-name">Chat <i>Record</i></span>
+        <a class="brand" href="#home" aria-label="Memories & Us — ပင်မစာမျက်နှာ">
+          <img class="brand-logo" src="assets/memories-us.jpg" alt="Memories & Us" />
         </a>
         <nav class="nav" aria-label="အဓိကလမ်းညွှန်">
           <a href="#home">ပင်မ</a>
@@ -27,40 +28,21 @@
       </header>
 
       <main id="home">
-        <section class="hero" aria-labelledby="hero-title">
-          <div class="hero-copy">
-            <p class="eyebrow"><span class="eyebrow-line"></span> ကြည့်ရှုရန်သာ — စကားဝိုင်းမှတ်တမ်း</p>
-            <h1 id="hero-title">စကားဝိုင်းတွေကို<br /><em>အစဉ်လိုက် စုစည်း</em>ထားပါ။</h1>
-            <p class="hero-description">Chat screenshot များကို မူရင်းပုံအတိုင်း ကြည့်ရှုနိုင်ရန် စုစည်းထားပါတယ်။ ဒီ website မှာ upload၊ ပြင်ဆင် သို့မဟုတ် ဖျက်လို့မရပါ။</p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#gallery">မှတ်တမ်းများကို ကြည့်ရန် <span aria-hidden="true">↓</span></a>
-              <span class="text-link">ကြည့်ရှုရန်သာ</span>
-            </div>
-            <div class="little-note"><span class="note-heart" aria-hidden="true">ⓘ</span><span>Public website — လူတိုင်းကြည့်နိုင်၊ viewer များက ပြင်ဆင်/တင်လို့မရပါ။</span></div>
-          </div>
-          <figure class="cover-card">
-            <img src="assets/memories-us.jpg" alt="Memories & Us — Our digital scrapbook archive" fetchpriority="high" />
-            <figcaption><span class="caption-dot"></span> chat screenshot archive <span class="caption-heart" aria-hidden="true">•</span></figcaption>
-            <span class="cover-sticker" aria-hidden="true">view<br />only</span>
-          </figure>
-          <span class="hero-sparkle sparkle-one" aria-hidden="true">✳</span>
-          <span class="hero-sparkle sparkle-two" aria-hidden="true">✦</span>
+        <section class="hero-banner" aria-label="Memories & Us">
+          <img class="masthead-image" src="assets/memories-us.jpg" alt="Memories & Us banner" fetchpriority="high" />
         </section>
 
         <section class="overview" aria-label="မှတ်တမ်းအကျဉ်း">
           <div class="overview-item"><span class="overview-icon">▤</span><span class="overview-label">မှတ်တမ်း</span><strong id="momentCount">10</strong></div>
           <span class="overview-divider" aria-hidden="true"></span>
           <div class="overview-item"><span class="overview-icon">▧</span><span class="overview-label">ပုံများ</span><strong id="photoCount">10</strong></div>
-          <div class="overview-note">ပေးထားသော screenshot များကို မူရင်းအတိုင်း ပြသထားသည်</div>
         </section>
 
         <section class="gallery-section" id="gallery" aria-labelledby="gallery-heading">
           <div class="gallery-heading-row">
             <div class="section-heading">
-              <p class="eyebrow"><span class="eyebrow-line"></span> ဖတ်ရှုရန် မှတ်တမ်းစာရင်း</p>
               <h2 id="gallery-heading">Chat screenshot <em>များ</em></h2>
             </div>
-            <span class="view-only-badge"><span aria-hidden="true">◉</span> VIEW ONLY</span>
           </div>
           <div id="memoryGrid" class="memory-grid" aria-live="polite"></div>
         </section>
