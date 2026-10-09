@@ -1,22 +1,18 @@
 # စကားဝိုင်းမှတ်တမ်း
 
-ပေးထားသော chat screenshot များနှင့် ဆက်စပ်မှတ်ချက်များကို စုစည်းကြည့်ရှုဖို့ ပြုလုပ်ထားသော ဝက်ဘ်ဆိုက်။ ခေါင်းစည်းတွင် သင်ပေးထားသော **Memories & Us** banner ကို အသုံးပြုထားပြီး chat screenshot ၁၀ ပုံကို gallery ထဲတွင် ပြသထားသည်။
+Chat screenshot များကို လူတိုင်းဖတ်ရှုနိုင်သည့် public archive ဝက်ဘ်ဆိုက်။ ဝက်ဘ်ဆိုက်တွင် **ကြည့်ရှုခြင်း၊ ရှာဖွေခြင်းနှင့် ပုံကို အပြည့်ကြည့်ခြင်းသာ** ရနိုင်ပြီး viewer များအတွက် upload၊ edit၊ delete၊ import သို့မဟုတ် ပြင်ဆင်ချက်သိမ်းခြင်း မရှိပါ။
 
 ## Website
 
-[GitHub Pages မှ အများပြည်သူကြည့်ရှုနိုင်သော website](https://daily-wage-app.github.io/memory-chat-hub/)
+[Public GitHub Pages website](https://daily-wage-app.github.io/memory-chat-hub/)
 
-Repository သည် public ဖြစ်ပြီး GitHub Pages က `main` branch မှ website ကို တိုက်ရိုက်ထုတ်ဝေထားသည်။ ပုံများနှင့် ပုံထဲက စာသားများကို အင်တာနက်အသုံးပြုသူ မည်သူမဆို ကြည့်နိုင်သည်။
+Public repository ၏ `main` branch မှ GitHub Pages ဖြင့် publish လုပ်ထားသည်။ ပေးထားသော screenshot ၁၀ ပုံနှင့် banner ကို repository ထဲ asset အဖြစ် သိမ်းထားပြီး ပုံထဲကစာများအပါအဝင် လူတိုင်းကြည့်နိုင်သည်။
 
-## လုပ်ဆောင်ချက်များ
+## Viewer permissions
 
-Gallery ထဲရှိ screenshot ၁၀ ပုံကို အပြည့်ကြည့်ခြင်း၊ ခေါင်းစဉ်နှင့် မှတ်ချက်ဖြင့် ရှာဖွေခြင်း၊ မှတ်သားထားခြင်းတို့ ပြုလုပ်နိုင်သည်။ ထပ်မံမှတ်တမ်းတင်ရန် ခေါင်းစဉ်၊ နေ့စွဲ၊ မှတ်ချက်နှင့် ပုံ URL သို့မဟုတ် 1.5 MB အထိ ပုံဖိုင်ထည့်နိုင်သည်။ JSON backup ထုတ်ယူခြင်းနှင့် ပြန်ထည့်ခြင်းလည်း ပါဝင်သည်။
+ဆိုဒ်ထဲတွင် upload form၊ ပြင်ဆင်ရန်ခလုတ်၊ ဖျက်ရန်ခလုတ်၊ backup import/export သို့မဟုတ် မှတ်တမ်းရေးသားသည့် browser storage မပါဝင်ပါ။ ရှာဖွေရေး box သည် စာမျက်နှာပေါ်ရှိပုံများကိုသာ စစ်ထုတ်ပြပြီး ရလဒ်ကို သိမ်းမထားပါ။ GitHub Pages သည် static website ဖြစ်သဖြင့် visitor များက site မှတစ်ဆင့် content ပြောင်းလဲ၍ မရပါ။
 
-Screenshot များကို `assets/memories/` ဖိုင်တွဲထဲတွင် သိမ်းထားသောကြောင့် မူရင်း image-hosting link များ အလုပ်မလုပ်တော့သော်လည်း website မှာ ပုံများကို ပြသနိုင်သည်။
-
-## သိမ်းဆည်းမှုနှင့် ကိုယ်ရေးလုံခြုံမှု
-
-Repository ထဲ commit လုပ်ထားသော screenshot များသည် public ဖြစ်သည်။ Form မှတစ်ဆင့် နောက်မှထည့်သောမှတ်တမ်းများကို အသုံးပြုနေသည့် browser ၏ `localStorage` ထဲတွင်သာ သိမ်းဆည်းထားပြီး အခြားစက်များသို့ အလိုအလျောက် ထပ်တူမပြုလုပ်ပါ။ Browser data ရှင်းလျှင် ထိုအမှတ်တရများ ပျောက်နိုင်သဖြင့် backup ကို download လုပ်ထားပါ။
+Repository ထဲသို့ push လုပ်နိုင်သည့် GitHub account/maintainer များသာ publish လုပ်ထားသော website ကို update လုပ်နိုင်သည်။ Public visitor များသည် repository ကို ကြည့်ရှုနိုင်သော်လည်း `main` branch သို့ တိုက်ရိုက်ရေးသားခွင့် အလိုအလျောက် မရပါ။
 
 ## Local preview
 
@@ -24,4 +20,4 @@ Repository ထဲ commit လုပ်ထားသော screenshot များ�
 python3 -m http.server 8000
 ```
 
-ထို့နောက် <http://localhost:8000> ကိုဖွင့်ပါ။ အဓိကဖိုင်များမှာ `index.html`, `styles.css`, `script.js` ဖြစ်ပြီး banner သည် `assets/memories-us.jpg` ဖြစ်သည်။
+ပြီးလျှင် <http://localhost:8000> ကိုဖွင့်ပါ။ အဓိကဖိုင်များမှာ `index.html`, `styles.css`, `script.js`; ပုံများမှာ `assets/memories/` နှင့် `assets/memories-us.jpg` ဖြစ်သည်။

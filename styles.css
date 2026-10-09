@@ -113,7 +113,7 @@ h1 em, h2 em { color: var(--rose-deep); font-weight: 500; }
 .memory-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 22px; }
 .memory-card { overflow: hidden; background: #fff; border: 1px solid #eddfd8; box-shadow: 0 9px 24px rgba(91,62,56,.065); transition: transform .22s, box-shadow .22s; }
 .memory-card:hover { transform: translateY(-4px); box-shadow: 0 15px 32px rgba(91,62,56,.12); }
-.memory-photo { position: relative; display: grid; place-items: center; height: 380px; overflow: hidden; background: #f4e8e3; cursor: zoom-in; }
+.memory-photo { position: relative; display: grid; place-items: center; width: 100%; height: 380px; overflow: hidden; padding: 0; border: 0; color: inherit; background: #f4e8e3; cursor: zoom-in; }
 .memory-photo img { width: 100%; height: 100%; display: block; object-fit: contain; transition: filter .2s; }
 .memory-photo:hover img { filter: brightness(.96); }
 .photo-missing { display: grid; place-items: center; color: #b8898b; font-size: 34px; }
@@ -122,6 +122,8 @@ h1 em, h2 em { color: var(--rose-deep); font-weight: 500; }
 .memory-date::before { content: ''; width: 12px; height: 1px; background: #cf8c91; }
 .memory-title { margin: 7px 0 5px; color: #4a373b; font: 600 19px/1.5 var(--serif); overflow-wrap: anywhere; }
 .memory-caption { margin: 0; color: #816e70; font-size: 12px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
+.record-tag { display: inline-block; margin-top: 12px; padding: 3px 8px; border: 1px solid #e7d8d3; color: #8f7779; font-size: 10px; }
+.view-only-badge { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 8px; padding: 6px 11px; border: 1px solid #e7d8d3; color: #856f71; background: rgba(255,255,255,.65); font-size: 10px; letter-spacing: .08em; }
 .memory-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 13px; margin-top: 12px; border-top: 1px solid #f0e7e2; }
 .card-action { border: 0; padding: 4px 0; color: #9b8282; background: transparent; cursor: pointer; font-size: 11px; }
 .card-action:hover { color: var(--rose-deep); }
