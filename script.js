@@ -5,9 +5,9 @@
   const LEGACY_STORAGE_KEY = 'memories-and-us-v1';
   const DEFAULT_MEMORIES = Array.from({ length: 10 }, (_, index) => ({
     id: `included-chat-${String(index + 1).padStart(2, '0')}`,
-    title: `စကားဝိုင်း အမှတ်တရ ${new Intl.NumberFormat('my-MM').format(index + 1)}`,
+    title: `စကားဝိုင်းမှတ်တမ်း ${new Intl.NumberFormat('my-MM').format(index + 1)}`,
     date: '',
-    caption: 'ပုံထဲက စကားလေးတွေကို ပြန်ဖတ်ဖို့ သိမ်းထားပါတယ်။',
+    caption: 'ပေးထားသော screenshot ကို မှတ်တမ်းအဖြစ် သိမ်းဆည်းထားသည်။',
     image: `assets/memories/${String(index + 1).padStart(2, '0')}.${index === 2 ? 'webp' : 'jpg'}`,
     favorite: false,
   }));
@@ -99,23 +99,23 @@
     if (item.image) {
       photo.setAttribute('role', 'button');
       photo.setAttribute('tabindex', '0');
-      photo.setAttribute('aria-label', `${item.title || 'အမှတ်တရပုံ'} ကို အပြည့်ကြည့်ရန်`);
+      photo.setAttribute('aria-label', `${item.title || 'မှတ်တမ်းပုံ'} ကို အပြည့်ကြည့်ရန်`);
       const img = document.createElement('img');
       img.src = item.image;
-      img.alt = item.title || 'အမှတ်တရပုံ';
+      img.alt = item.title || 'မှတ်တမ်းပုံ';
       img.loading = 'lazy';
-      img.addEventListener('error', () => { photo.replaceChildren(textElement('span', '', '♡')); photo.classList.add('photo-missing'); photo.removeAttribute('role'); photo.removeAttribute('tabindex'); }, { once: true });
+      img.addEventListener('error', () => { photo.replaceChildren(textElement('span', '', '▧')); photo.classList.add('photo-missing'); photo.removeAttribute('role'); photo.removeAttribute('tabindex'); }, { once: true });
       photo.append(img);
       photo.addEventListener('click', () => openLightbox(item));
       photo.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(item); } });
     } else {
-      photo.append(textElement('span', '', '♡'));
+      photo.append(textElement('span', '', '▧'));
     }
 
     const body = document.createElement('div');
     body.className = 'memory-body';
     body.append(textElement('div', 'memory-date', formatDate(item.date)));
-    body.append(textElement('h3', 'memory-title', item.title || 'ခေါင်းစဉ်မရှိသော အမှတ်တရ'));
+    body.append(textElement('h3', 'memory-title', item.title || 'ခေါင်းစဉ်မရှိသော မှတ်တမ်း'));
     body.append(textElement('p', 'memory-caption', item.caption || ''));
 
     const actions = document.createElement('div');
@@ -126,7 +126,7 @@
     favorite.dataset.action = 'favorite';
     favorite.dataset.id = item.id;
     favorite.setAttribute('aria-pressed', String(Boolean(item.favorite)));
-    favorite.textContent = item.favorite ? '♥ အကြိုက်ဆုံး' : '♡ အကြိုက်ဆုံးထဲထည့်';
+    favorite.textContent = item.favorite ? '★ မှတ်သားထားသည်' : '☆ မှတ်သားရန်';
     const remove = document.createElement('button');
     remove.type = 'button';
     remove.className = 'card-action';
@@ -149,20 +149,20 @@
     });
     grid.replaceChildren();
     updateCounts(all);
-    byId('resultLabel').textContent = favoritesOnly ? `${shown.length} ခု · အကြိုက်ဆုံး` : `${shown.length} ခု`;
+    byId('resultLabel').textContent = favoritesOnly ? `${shown.length} ခု · မှတ်သားထားသည်` : `${shown.length} ခု`;
 
     if (!shown.length) {
       const empty = document.createElement('div');
       empty.className = 'empty-state';
-      empty.append(textElement('span', 'empty-icon', query || favoritesOnly ? '⌕' : '♡'));
-      const title = query || favoritesOnly ? 'ရှာတွေ့တာ မရှိသေးပါ' : 'ဒီစာမျက်နှာလေးမှာ အမှတ်တရ မရှိသေးပါ';
+      empty.append(textElement('span', 'empty-icon', query || favoritesOnly ? '⌕' : '▤'));
+      const title = query || favoritesOnly ? 'ရှာတွေ့တာ မရှိသေးပါ' : 'ဒီစာမျက်နှာမှာ မှတ်တမ်းမရှိသေးပါ';
       empty.append(textElement('strong', '', title));
       const message = document.createElement('p');
-      message.textContent = query || favoritesOnly ? 'စကားလုံးပြောင်းပြီး ထပ်ရှာကြည့်ပါ။' : 'ပထမဆုံး chat screenshot လေးကို URL နဲ့ထည့်ပြီး စလိုက်ရအောင် — ';
+      message.textContent = query || favoritesOnly ? 'ရှာဖွေစကားလုံးကို ပြောင်းပြီး ထပ်စမ်းပါ။' : 'Chat screenshot တစ်ပုံကို URL နဲ့ဖြစ်စေ၊ ဖိုင်ရွေးပြီးဖြစ်စေ ထည့်နိုင်ပါတယ် — ';
       if (!query && !favoritesOnly) {
         const link = document.createElement('a');
         link.href = '#add-memory';
-        link.textContent = 'အမှတ်တရတစ်ခု သိမ်းမယ်';
+        link.textContent = 'မှတ်တမ်းအသစ်ထည့်ရန်';
         message.append(link);
       }
       empty.append(message);
@@ -255,7 +255,7 @@
     clearPreview();
     byId('date').value = localDateValue();
     render();
-    showToast('အမှတ်တရလေးကို သိမ်းပြီးပါပြီ ♡');
+    showToast('မှတ်တမ်းကို သိမ်းပြီးပါပြီ။');
     byId('gallery').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
@@ -267,7 +267,7 @@
     if (index < 0) return;
     if (button.dataset.action === 'favorite') items[index].favorite = !items[index].favorite;
     if (button.dataset.action === 'delete') {
-      if (!window.confirm(`“${items[index].title || 'ဒီအမှတ်တရ'}” ကို ဖျက်မှာ သေချာပါသလား?`)) return;
+      if (!window.confirm(`“${items[index].title || 'ဒီမှတ်တမ်း'}” ကို ဖျက်မှာ သေချာပါသလား?`)) return;
       items.splice(index, 1);
     }
     if (saveMemories(items)) render();
@@ -291,10 +291,10 @@
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'memories-and-us-backup.json';
-    anchor.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      anchor.href = url;
+      anchor.download = 'chat-record-archive-backup.json';
+      anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast('Backup ဖိုင်ကို download လုပ်ပြီးပါပြီ။');
   });
 
