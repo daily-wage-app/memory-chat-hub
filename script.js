@@ -37,7 +37,17 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved !== null) {
         const value = JSON.parse(saved);
-        return Array.isArray(value) ? value.filter((item) => item && typeof item === 'object' && typeof item.id === 'string') : [];
+        if (!Array.isArray(value)) return [];
+        let changed = false;
+        const memories = value.filter((item) => item && typeof item === 'object' && typeof item.id === 'string').map((item) => {
+          if (!item.id.startsWith('included-chat-')) return item;
+          const seed = DEFAULT_MEMORIES[Number(item.id.slice(-2)) - 1];
+          if (!seed || (item.title === seed.title && item.caption === seed.caption)) return item;
+          changed = true;
+          return { ...item, title: seed.title, caption: seed.caption };
+        });
+        if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(memories));
+        return memories;
       }
 
       let previous = [];
