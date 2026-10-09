@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Chat Memories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            max-height: 800px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-info h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-info p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .icon-btn:hover {
+            opacity: 1;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 85%;
+        }
+
+        .text-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.sent .text-bubble {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .text-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .image-bubble {
+            border-radius: 18px;
+            overflow: hidden;
+            max-width: 280px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .image-bubble:hover {
+            transform: scale(0.98);
+        }
+
+        .image-bubble img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .message.sent .image-bubble {
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .image-bubble {
+            border-bottom-left-radius: 4px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .date-divider {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin: 12px 0;
+            position: relative;
+        }
+
+        .date-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+            z-index: -1;
+        }
+
+        .date-divider span {
+            background: #f5f5f5;
+            padding: 0 8px;
+        }
+
+        /* Input Area */
+        .input-area {
+            border-top: 1px solid #e0e0e0;
+            padding: 12px 16px;
+            background: white;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .input-icons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .btn-icon:hover {
+            opacity: 1;
+        }
+
+        .input-field {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            max-height: 100px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+        }
+
+        .btn-send {
+            background: #667eea;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background: #5568d3;
+        }
+
+        /* File Input (Hidden) */
+        #imageInput {
+            display: none;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: slideUp 0.3s ease;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar Styling */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                max-height: 100vh;
+                border-radius: 0;
+                height: 100vh;
+            }
+
+            .message-content {
+                max-width: 90%;
+            }
+
+            .image-bubble {
+                max-width: 240px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="avatar">💕</div>
+                <div class="header-info">
+                    <h2>Our Memories</h2>
+                    <p>Always together</p>
+                </div>
+            </div>
+            <div class="header-icons">
+                <button class="icon-btn" title="Call">📞</button>
+                <button class="icon-btn" title="Menu">⋮</button>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <div class="date-divider">
+                <span>Today</span>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-icons">
+                <button class="btn-icon" id="addImageBtn" title="Add photo">📷</button>
+                <button class="btn-icon" id="addEmojiBtn" title="Add emoji">😊</button>
+            </div>
+            <textarea
+                class="input-field"
+                id="messageInput"
+                placeholder="Type a message..."
+                rows="1"
+            ></textarea>
+            <button class="btn-send" id="sendBtn" title="Send">➤</button>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <img id="lightboxImage" src="" alt="Full view">
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'chat-memories';
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const addImageBtn = document.getElementById('addImageBtn');
+        const addEmojiBtn = document.getElementById('addEmojiBtn');
+        const imageInput = document.getElementById('imageInput');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        // Sample messages (if no storage)
+        const defaultMessages = [
+            { type: 'text', content: 'Hey! 😊', sender: 'received', timestamp: '10:30 AM' },
+            { type: 'text', content: 'Hi love! How is your day going? 💕', sender: 'sent', timestamp: '10:31 AM' },
+            { type: 'text', content: 'So amazing now that I talked to you 😘', sender: 'received', timestamp: '10:32 AM' },
+            { type: 'image', content: 'https://i.ibb.co/0pxYdHhT/Screenshot-com-zhiliaoapp-musically.jpg', sender: 'received', timestamp: '10:33 AM' },
+            { type: 'text', content: 'This made me smile so much! 🥰', sender: 'sent', timestamp: '10:34 AM' },
+            { type: 'text', content: 'I miss you already', sender: 'received', timestamp: '10:35 AM' },
+        ];
+
+        function getMessages() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMessages));
+                return [...defaultMessages];
+            }
+            return JSON.parse(saved);
+        }
+
+        function saveMessages(messages) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        }
+
+        function formatTime(date = new Date()) {
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function renderMessages() {
+            chatArea.innerHTML = '<div class="date-divider"><span>Today</span></div>';
+            const messages = getMessages();
+            
+            messages.forEach(msg => {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${msg.sender}`;
+
+                if (msg.type === 'text') {
+                    messageEl.innerHTML = `
+                        <div class="message-content">
+                            <div class="text-bubble">${escapeHtml(msg.content)}</div>
+                            <div class="timestamp">${msg.timestamp}</div>
+                        </div>
+                    `;
+                } else if (msg.type === 'image') {
+                    messageEl.innerHTML = `
+                        <div class="message-content">
+                            <div class="image-bubble" onclick="openLightbox('${msg.content}')">
+                                <img src="${msg.content}" alt="Shared image" loading="lazy">
+                            </div>
+                            <div class="timestamp">${msg.timestamp}</div>
+                        </div>
+                    `;
+                }
+
+                chatArea.appendChild(messageEl);
+            });
+
+            // Scroll to bottom
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function addMessage(type, content, sender) {
+            const messages = getMessages();
+            messages.push({
+                type,
+                content,
+                sender,
+                timestamp: formatTime()
+            });
+            saveMessages(messages);
+            renderMessages();
+        }
+
+        sendBtn.addEventListener('click', () => {
+            const text = messageInput.value.trim();
+            if (text) {
+                addMessage('text', text, 'sent');
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+
+        messageInput.addEventListener('input', () => {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 100) + 'px';
+        });
+
+        addImageBtn.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    addMessage('image', event.target.result, 'sent');
+                };
+                reader.readAsDataURL(file);
+                imageInput.value = '';
+            }
+        });
+
+        addEmojiBtn.addEventListener('click', () => {
+            const emojis = ['😊', '😍', '🥰', '😘', '💕', '❤️', '✨', '🌟', '😂', '🎉'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            messageInput.value += emoji;
+            messageInput.focus();
+        });
+
+        function openLightbox(src) {
+            lightboxImage.src = src;
+            lightbox.classList.add('active');
+        }
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Initialize
+        renderMessages();
+    </script>
+</body>
+</html>
