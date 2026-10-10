@@ -1,13 +1,12 @@
 (() => {
   'use strict';
 
-  // These screenshots were supplied on 9 October 2026 (UTC+7).
-  // When the owner provides a new photo URL, add it here with that day's date.
-  const suppliedOn = '2026-10-09';
+  // The original ten screenshots were supplied on 9 October 2026 (UTC+7).
   const records = Array.from({ length: 10 }, (_, index) => ({
     image: `assets/memories/${String(index + 1).padStart(2, '0')}.${index === 2 ? 'webp' : 'jpg'}`,
-    date: suppliedOn,
+    date: '2026-10-09',
   }));
+  records.push({ image: 'assets/memories/11.jpg', date: '2026-10-10' });
   const grid = document.getElementById('memoryGrid');
   const lightbox = document.getElementById('lightbox');
   const numberFormat = new Intl.NumberFormat('my-MM');
