@@ -10,6 +10,7 @@
   records.push({ image: 'assets/memories/12.jpg', date: '2026-10-10' });
   records.push({ image: 'assets/memories/13.jpg', date: '2026-10-10' });
   records.push({ image: 'assets/memories/14.jpg', date: '2026-10-10', time: '20:23:33' });
+  records.push({ image: 'assets/memories/15.jpg', date: '2026-10-10', time: '20:27:24' });
   const grid = document.getElementById('memoryGrid');
   const lightbox = document.getElementById('lightbox');
   const numberFormat = new Intl.NumberFormat('my-MM');
