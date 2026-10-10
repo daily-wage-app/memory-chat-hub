@@ -8,6 +8,7 @@
   }));
   records.push({ image: 'assets/memories/11.jpg', date: '2026-10-10' });
   records.push({ image: 'assets/memories/12.jpg', date: '2026-10-10' });
+  records.push({ image: 'assets/memories/13.jpg', date: '2026-10-10' });
   const grid = document.getElementById('memoryGrid');
   const lightbox = document.getElementById('lightbox');
   const numberFormat = new Intl.NumberFormat('my-MM');
