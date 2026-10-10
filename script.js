@@ -9,9 +9,14 @@
   records.push({ image: 'assets/memories/11.jpg', date: '2026-10-10' });
   records.push({ image: 'assets/memories/12.jpg', date: '2026-10-10' });
   records.push({ image: 'assets/memories/13.jpg', date: '2026-10-10' });
+  records.push({ image: 'assets/memories/14.jpg', date: '2026-10-10', time: '20:23:33' });
   const grid = document.getElementById('memoryGrid');
   const lightbox = document.getElementById('lightbox');
   const numberFormat = new Intl.NumberFormat('my-MM');
+
+  function toBurmese(value) {
+    return String(value).replace(/[0-9]/g, (digit) => '၀၁၂၃၄၅၆၇၈၉'[Number(digit)]);
+  }
 
   function formatDate(value) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return '';
@@ -19,15 +24,20 @@
     const date = new Date(Date.UTC(year, month - 1, day, 12));
     if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return '';
     const months = ['ဇန်နဝါရီ', 'ဖေဖော်ဝါရီ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်', 'ဇူလိုင်', 'ဩဂုတ်', 'စက်တင်ဘာ', 'အောက်တိုဘာ', 'နိုဝင်ဘာ', 'ဒီဇင်ဘာ'];
-    const toBurmese = (digits) => String(digits).replace(/[0-9]/g, (digit) => '၀၁၂၃၄၅၆၇၈၉'[Number(digit)]);
     return `${toBurmese(day)} ${months[month - 1]} ${toBurmese(year)}`;
+  }
+
+  function formatRecordDate(record) {
+    const dateLabel = formatDate(record.date);
+    if (!dateLabel || !record.time || !/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(record.time)) return dateLabel;
+    return `${dateLabel} • ${toBurmese(record.time)} (UTC+07:00)`;
   }
 
   function openImage(record, index) {
     const image = document.getElementById('lightboxImage');
     image.src = record.image;
     image.alt = `Chat screenshot ${numberFormat.format(index + 1)}`;
-    document.getElementById('lightboxCaption').textContent = formatDate(record.date);
+    document.getElementById('lightboxCaption').textContent = formatRecordDate(record);
     lightbox.showModal();
   }
 
@@ -56,7 +66,7 @@
       photo.addEventListener('click', () => openImage(record, index));
       card.append(photo);
 
-      const dateText = formatDate(record.date);
+      const dateText = formatRecordDate(record);
       if (dateText) {
         const body = document.createElement('div');
         body.className = 'memory-body';
